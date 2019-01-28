@@ -46,62 +46,72 @@
 				<a href="index.html">Back to Home.</a>
 			</h2>
 			<section>
-				<h2 id="skills">Project1 Description</h2>
+				<h2 id="skills">ThempX11</h2>
+				<h3><a class="link" href="https://github.com/Themperror/ThempX11">Link to the Github.</a></h3>
 				<section class="sub-card">
 					<h3>Type</h3>
-					<p class="tab">Game</p>
+					<p class="tab">Tech Demo / Renderer</p>
 					<h3>Language</h3>
 					<p class="tab">C++</p>
 					<h3>API's</h3>
 					<p class="tab">D3D11</p>
 					<h3>Libraries</h3>
-					<p class="tab">None</p>
+					<p class="tab">"<a href="https://github.com/ocornut/imgui">Dear Imgui</a>" as Debug UI</p>
 					<h3>Comments</h3>
-					<p class="tab">Made from scratch.<br>Written tools to export images in .DDS (using DirectXTex) and models in my own custom format (Using Assimp)</p>
+					<p class="tab">Made from scratch.<br>Written tools to export images in .DDS (using DirectXTex) and models in my own custom format (Using Assimp).</p>
 				</section>
-			</section>
-			
-			<section>
-				<h2 id="projects">Project 1</h2>
-				<p id="projects"> This is a project named project 1, this and that and this and that. </p>
-				
-				<p><br><br>Click on images to view the full version.</p>
+				<p id="projects"> This was one of the two 6-month long project that were part of my final study year. The initial goal was to focus on shadowing techniques but after I implemented the first one, the decision to add PBR was quickly added as well.</p>
+				<p id="projects"> The scene is created with a <b>deferred renderer</b>, meaning I first render all the geometry to a few rendertargets which is called a <b>G(eometry)-Buffer.</b></p>
+				<p><br><br>Click on images to view the full versions.</p>
 				<div class="hcontainer">
-					<a target="_blank" href="./assets/images/monkey.gif">
+					<a target="_blank" href="./assets/images/x11Diffuse.jpg">
 						<div class="imgcard">
-							<img src="./assets/images/monkey.gif">
+							<img src="./assets/images/x11Diffuse.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/x11Normals.jpg">
+						<div class="imgcard">
+							<img src="./assets/images/x11Normals.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/X11Pos.jpg">
+						<div class="imgcard">
+							<img src="./assets/images/X11Pos.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/X11f0.jpg">
+						<div class="imgcard">
+							<img src="./assets/images/X11f0.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/X11Misc.jpg">
+						<div class="imgcard">
+							<img src="./assets/images/X11Misc.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/X11depth.jpg">
+						<div class="imgcard">
+							<img src="./assets/images/X11depth.jpg">
 						</div>
 					</a>
 				</div>
-				<section class="sub-card">
-					<p>
-						This is a sub box to expand on some subject that I've gone over just ago
-					</p>
-					<h3><a class="link" href="Project1.html">Link to the github</a></h3>
-					<div class="hcontainer">
-						<a target="_blank" href="./assets/images/dragon.gif">
-							<div>
-								<img src="./assets/images/dragon.gif">
-							</div>
-						</a>
-						<a target="_blank" href="./assets/images/monkey.gif">
-							<div class="imgcard">
-								<img src="./assets/images/monkey.gif">
-							</div>
-						</a>
-						<a target="_blank" href="./assets/images/teapot.png">
-							<div class="imgcard">
-								<img src="./assets/images/teapot.png">
-							</div>
-						</a>
-					</div>
-					<div class="container">
-						<p>Fast 3D multi-threaded CPU rasterizer written in C++. It supports shaders, textures and more.</p>
-					</div>
-				</section>
-
+				<p id="projects">My G-Buffer exists out of the following data (left to right):<br>-Diffuse,<br>-World Normals,<br>-World Position,<br>-F0 (Index of Refraction),<br>-Misc (R: Roughness, G: Metallicness, B: EmissiveStrength, A: isEmissive), <br>-Depth.</b></p>		
+				<p id="projects"><br>After this step I calculate the shadows for all the lights, for Point Lights I use something called <b>Single Pass Render-to-Cubemap</b>, which uses geometry shaders to work on multiple viewports at once, rather than doing every face one by one.</p>
+				<p id="projects"><br>For Directional Lights I had implemented a few types of shadowing, this being the normal shadowmapping and <b>PCF</b> (including multisampled variants) and <b>Cascaded Shadow Mapping</b> which wasn't completely finished yet as it still suffers from swimming edges due to the light not moving in pixel-space.</p>
+				<p id="projects"><br>I also used a technique from DOOM <a href="http://www.adriancourreges.com/blog/2016/09/09/doom-2016-graphics-study/">(which can be found here)</a> called Shadow Map Atlassing.</p>
+				<div class="imgcard">
+					<img src="./assets/images/X11shadowatlas.jpg">
+				</div>
+				<p id="projects"><br>I wrote a simple command&conquer algorithm to reserve space in the shadow atlas for each light so I could simply call "ObtainTextureArea(size)" which would obtain an suitable area for the light to render to.</p>
 				
-			
+				<p id="projects"><br>For PBR I used sources from all over the place, most notably LearnOpenGL.com which has a nice guide on PBR, though a bit incomplete in my opinion so the PBR is a quite standard implementation.<br>Sadly <a href="https://google.github.io/filament/Filament.md.html">Google's Filament</a>  guide didn't exist yet when I was working on it as it's a godly source for PBR.</p> 
+				
+				<p id="projects">The scene is composed out of the extracted models from the Elemental Demo, which can be found on the Unreal Engine's Marketplace. Sadly as all the PBR related information is done on the materials inside the engine, all I got exported was the diffuse and normal maps. I wrote my own material system in order to gain some control of all the values and manually made a texture describing the PBR info per material. I am no artist however so if something looks off that's probably my fault with creating the textures.<br>Final result looks like this:</p> 
+				<a target="_blank" href="./assets/images/X11.jpg">
+					<div class="fullimage">
+						<img src="./assets/images/X11.jpg">
+					</div>
+				</a>
 		</div>
 	</div>
 
