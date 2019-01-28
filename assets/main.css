@@ -51,14 +51,13 @@ body {
 	margin: 6px;
 	border-radius: 2px;
 	box-sizing: border-box;
-
 	box-shadow: 0 4px 6px 0 rgba(0,0,0,0.4);
 	background: #252525;
 	overflow: hidden;
 }
 
 .imgcard img {
-	width: 110%;
+	width: 100%;
 	height: auto;
 	transition: opacity 200ms;
 }
