@@ -43,8 +43,8 @@ body {
 }
 
 .imgcard {
-	width: 16vw;
-	height: 12vw;
+	width: 15vw;
+	height: 10vw;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -57,7 +57,7 @@ body {
 }
 
 .imgcard img {
-	width: 100%;
+	width: 120%;
 	height: auto;
 	transition: opacity 200ms;
 }
