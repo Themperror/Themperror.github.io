@@ -41,23 +41,10 @@ body {
 	margin-bottom: 2vh;
 	overflow: hidden;
 }
-.video {
-	width: 16vw;
-	height: 16vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 6px;
-	border-radius: 2px;
-	box-sizing: border-box;
 
-	box-shadow: 0 4px 6px 0 rgba(0,0,0,0.4);
-	background: #252525;
-	overflow: hidden;
-}
 .imgcard {
 	width: 16vw;
-	height: 16vw;
+	height: 12vw;
 	display: flex;
 	align-items: center;
 	justify-content: center;
