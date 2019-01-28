@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta property="og:image" content="./assets/images/avatar.png">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://Themperror.github.io/">
+		<meta property="og:title" content="Themperror's Portfolio">
+		<meta property="og:description" content="Game/Engine Programmer">
+
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Themperror's Portfolio</title>
+
+		<!-- <link href="./assets/foundation-icons.css" rel="stylesheet"> /-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="./assets/main.css">
+		<link rel="stylesheet" href="./assets/layout.css">
+		<link rel="stylesheet" href="./assets/monokai.min.css">
+
+		<link rel="shortcut icon" href="https://Themperror.github.io/favicon.ico">
+	</head>
+	<body>
+		<script src="./assets/scripts/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+		</script>
+
+		<div id="main" class="container">
+			<div class="container header" id="mainHeader">
+				<canvas class="headerCanvas" id="disp"></canvas>
+
+				<div class="avatar">
+					<div class="round-image pop" style="background-image: linear-gradient(rgba(229, 223, 197, 0.5), rgba(229, 223, 197, 0.4)), url(&#39;./assets/images/avatar.png&#39;);" title="Me">
+					</div>
+				</div>
+				<div class="container">
+					<h1 class="title"><b>Themperror</b></h1>
+					<h4 class="sub-title">Game/Engine Programmer</h4>
+					<div class="social">
+						<a class="fi-social-github menu-btn" href="https://github.com/Themperror" title="GitHub"></a>
+						<a class="fi-mail menu-btn" href="mailto:themperror1@gmail.com" title="E-Mail"></a>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+			<h2 id="welcome">
+				<a href="index.html">Back to Home.</a>
+			</h2>
+			<section>
+				<h2 id="skills">Project1 Description</h2>
+				<section class="sub-card">
+					<h3>Type</h3>
+					<p class="tab">Game</p>
+					<h3>Language</h3>
+					<p class="tab">C++</p>
+					<h3>API's</h3>
+					<p class="tab">D3D11</p>
+					<h3>Libraries</h3>
+					<p class="tab">None</p>
+					<h3>Comments</h3>
+					<p class="tab">Made from scratch.<br>Written tools to export images in .DDS (using DirectXTex) and models in my own custom format (Using Assimp)</p>
+				</section>
+			</section>
+			
+			<section>
+				<h2 id="projects">Project 1</h2>
+				<p id="projects"> This is a project named project 1, this and that and this and that. </p>
+				
+				<p><br><br>Click on images to view the full version.</p>
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/monkey.gif">
+						<div class="imgcard">
+							<img src="./assets/images/monkey.gif">
+						</div>
+					</a>
+				</div>
+				<section class="sub-card">
+					<p>
+						This is a sub box to expand on some subject that I've gone over just ago
+					</p>
+					<h3><a class="link" href="Project1.html">Link to the github</a></h3>
+					<div class="hcontainer">
+						<a target="_blank" href="./assets/images/dragon.gif">
+							<div>
+								<img src="./assets/images/dragon.gif">
+							</div>
+						</a>
+						<a target="_blank" href="./assets/images/monkey.gif">
+							<div class="imgcard">
+								<img src="./assets/images/monkey.gif">
+							</div>
+						</a>
+						<a target="_blank" href="./assets/images/teapot.png">
+							<div class="imgcard">
+								<img src="./assets/images/teapot.png">
+							</div>
+						</a>
+					</div>
+					<div class="container">
+						<p>Fast 3D multi-threaded CPU rasterizer written in C++. It supports shaders, textures and more.</p>
+					</div>
+				</section>
+
+				
+			
+		</div>
+	</div>
+
+	<script src="./assets/scripts/navigo.js"></script>
+	<script src="./assets/scripts/showdown.js"></script>
+	<script src="./assets/scripts/highlight.min.js"></script>
+
+	<script type="text/javascript">
+		var mainHeader = document.getElementById("mainHeader");
+		var canvas = document.getElementById("disp");
+		var ctx = canvas.getContext("2d");
+
+		window.onresize = function() 
+		{
+			canvas.width = window.innerWidth;
+			canvas.height = mainHeader.clientHeight;
+		};
+		window.onresize();
+
+		var MAX_PARTICLES = 512;
+		var particles = [];
+
+		for (var i = 0; i < MAX_PARTICLES; i++) 
+		{
+			particles.push(
+			{
+				x: 0,
+				y: 0,
+				z: 0,
+				vx: 0,
+				rand : 0,
+				dead: true
+			});
+		}
+
+		function redraw()
+		{
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgb(21, 21, 21, 0.5)";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.globalCompositeOperation = "lighter";
+			ctx.fillStyle = "rgba(229, 223, 197, 0.5)";
+			var t = time
+			for (var i = 0; i < MAX_PARTICLES; i++) 
+			{
+				var p = particles[i];
+				if (p.dead) continue;
+
+				ctx.beginPath();
+				ctx.arc(p.x, p.y  + Math.sin(p.rand + t * 0.1) * 10, p.z, 0, Math.PI * 2);
+				ctx.fill();
+			}
+		}
+
+		var time = 0;
+		function emit() 
+		{
+			var p = null;
+			for (var i = 0; i < MAX_PARTICLES; i++)
+			{
+				if (particles[i].dead) 
+				{
+					p = i;
+					break;
+				}
+			}
+
+			if (p === null) return;
+
+			particles[p].dead = false;
+			particles[p].x = -10;
+			particles[p].y = 5 + Math.random() * (canvas.height - 10);
+			particles[p].z = (Math.random() + 0.5) * 1.0;
+			particles[p].vx = (Math.random() + 0.2) * 5.0;
+			particles[p].rand = Math.random();
+			particles[p].wave = Math.random() >= 0.5;
+		}
+		function update()
+		{
+			var t = time++ % 35;
+			if(t == 0 )
+			{	
+				emit();
+				emit();
+			}
+
+			for (var i = 0; i < MAX_PARTICLES; i++) 
+			{
+				var p = particles[i];
+				if (p.dead) continue;
+				p.x += p.vx;
+
+				if (p.x > canvas.width+2 || p.y > canvas.height+2)
+					p.dead = true;
+			}
+		}
+
+		function loop() 
+		{
+			update();
+			redraw();
+			window.requestAnimationFrame(loop);
+		}
+
+		loop();
+	</script>
+</body></html>
