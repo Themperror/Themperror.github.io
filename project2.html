@@ -153,7 +153,7 @@
 
 		window.onresize = function() 
 		{
-			canvas.width = window.innerWidth;
+			canvas.width = document.body.clientWidth;
 			canvas.height = mainHeader.clientHeight;
 		};
 		window.onresize();
