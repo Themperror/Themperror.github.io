@@ -43,65 +43,46 @@
 			</div>
 			<div class="container">
 			<h2 id="welcome">
-				<a href="index.html">Back to Home.</a>
+				<a class="link" href="index.html">Back to Home.</a>
 			</h2>
 			<section>
-				<h2 id="skills">Project1 Description</h2>
+				<h2 id="skills">The Morph</h2>
+				
+				<h3><a class="link" href="https://github.com/Themperror/ThempX">Link to the Github.</a></h3>
 				<section class="sub-card">
 					<h3>Type</h3>
 					<p class="tab">Game</p>
 					<h3>Language</h3>
 					<p class="tab">C++</p>
 					<h3>API's</h3>
-					<p class="tab">D3D11</p>
+					<p class="tab">D3D9, DirectSound, DirectInput</p>
 					<h3>Libraries</h3>
-					<p class="tab">None</p>
+					<p class="tab">NVIDIA Physx</p>
 					<h3>Comments</h3>
-					<p class="tab">Made from scratch.<br>Written tools to export images in .DDS (using DirectXTex) and models in my own custom format (Using Assimp)</p>
+					<p class="tab">My first C++ project, engine + game in one.</p>
 				</section>
-			</section>
-			
-			<section>
-				<h2 id="projects">Project 1</h2>
-				<p id="projects"> This is a project named project 1, this and that and this and that. </p>
 				
-				<p><br><br>Click on images to view the full version.</p>
+				<p id="projects"> As to show my improvement in terms of programming and to show more about myself, I decided to put this old project on my portfolio as well, It was made back in 2013 as a part of a two-man project on my previous education, Unity was usually everyones choice back then but I decided I wanted to expand my programming knowledge and took a leap by tackling C++. The programming and modeling was done by me, The texturing was done by a classmate of mine back then.</p>
+				<p id="projects"> The goal with this project was to create a game similar to DOOM and Duke Nukem 3D. </p>
+				<p id="projects"> Features were:<br>-Three types of enemies with movement,<br>-Basic Duke Nukem type of "search keycard, open keycard doors",<br>-Melee attacking (the character was a gunless mutant),<br>-Mesh Collision with baking through PhysX, <br>-Ingame editor mode(to place objects like tables and enemies), <br>-Throwing cubes with physics around (for fun).</p>
 				<div class="hcontainer">
-					<a target="_blank" href="./assets/images/monkey.gif">
-						<div class="imgcard">
-							<img src="./assets/images/monkey.gif">
+					<a target="_blank" href="./assets/images/morph1.jpg">
+						<div class="imgcardbig">
+							<img src="./assets/images/morph1.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/morph2.jpg">
+						<div class="imgcardbig">
+							<img src="./assets/images/morph2.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/morph3.jpg">
+						<div class="imgcardbig">
+							<img src="./assets/images/morph3.jpg">
 						</div>
 					</a>
 				</div>
-				<section class="sub-card">
-					<p>
-						This is a sub box to expand on some subject that I've gone over just ago
-					</p>
-					<h3><a class="link" href="Project1.html">Link to the github</a></h3>
-					<div class="hcontainer">
-						<a target="_blank" href="./assets/images/dragon.gif">
-							<div>
-								<img src="./assets/images/dragon.gif">
-							</div>
-						</a>
-						<a target="_blank" href="./assets/images/monkey.gif">
-							<div class="imgcard">
-								<img src="./assets/images/monkey.gif">
-							</div>
-						</a>
-						<a target="_blank" href="./assets/images/teapot.png">
-							<div class="imgcard">
-								<img src="./assets/images/teapot.png">
-							</div>
-						</a>
-					</div>
-					<div class="container">
-						<p>Fast 3D multi-threaded CPU rasterizer written in C++. It supports shaders, textures and more.</p>
-					</div>
-				</section>
-
-				
-			
+			</section>
 		</div>
 	</div>
 
@@ -131,7 +112,7 @@
 				x: 0,
 				y: 0,
 				z: 0,
-				vx: 0,
+				vy: 0,
 				rand : 0,
 				dead: true
 			});
@@ -152,7 +133,7 @@
 				if (p.dead) continue;
 
 				ctx.beginPath();
-				ctx.arc(p.x, p.y  + Math.sin(p.rand + t * 0.1) * 10, p.z, 0, Math.PI * 2);
+				ctx.arc(p.x, p.y, p.z, 0, Math.PI * 2);
 				ctx.fill();
 			}
 		}
@@ -173,16 +154,16 @@
 			if (p === null) return;
 
 			particles[p].dead = false;
-			particles[p].x = -10;
-			particles[p].y = 5 + Math.random() * (canvas.height - 10);
+			particles[p].x = Math.random() * (canvas.width);
+			particles[p].y = -2;
 			particles[p].z = (Math.random() + 0.5) * 1.0;
-			particles[p].vx = (Math.random() + 0.2) * 5.0;
+			particles[p].vy = (Math.random() + 0.5) * 8.0;
 			particles[p].rand = Math.random();
 			particles[p].wave = Math.random() >= 0.5;
 		}
 		function update()
 		{
-			var t = time++ % 35;
+			var t = time++ % 25;
 			if(t == 0 )
 			{	
 				emit();
@@ -193,7 +174,8 @@
 			{
 				var p = particles[i];
 				if (p.dead) continue;
-				p.x += p.vx;
+				p.vy -= 0.15;
+				p.y += p.vy;
 
 				if (p.x > canvas.width+2 || p.y > canvas.height+2)
 					p.dead = true;
