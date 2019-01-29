@@ -118,6 +118,7 @@
 				y: 0,
 				z: 0,
 				vx: 0,
+				t: 0,
 				rand : 0,
 				dead: true
 			});
@@ -162,9 +163,9 @@
 			particles[p].x = -10;
 			particles[p].y = 5 + Math.random() * (canvas.height - 10);
 			particles[p].z = (Math.random() + 0.5) * 1.0;
-			particles[p].vx = (Math.random() + 0.2) * 5.0;
+			particles[p].vx = (Math.random() + 0.5) * 15.0;
 			particles[p].rand = Math.random();
-			particles[p].wave = Math.random() >= 0.5;
+			particles[p].t = (Math.random() + 1.0) * 4.0;
 		}
 		function update()
 		{
@@ -179,6 +180,18 @@
 			{
 				var p = particles[i];
 				if (p.dead) continue;
+				if(p.vx > 0 && p.t > 0)
+				{
+					p.vx -= 0.1;
+				}
+				if(p.vx < 0)
+				{
+					p.t -= 0.1;
+				}
+				if(p.t < 0)
+				{
+					p.vx += 0.1;
+				}
 				p.x += p.vx;
 
 				if (p.x > canvas.width+2 || p.y > canvas.height+2)
