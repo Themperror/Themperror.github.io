@@ -46,62 +46,91 @@
 				<a href="index.html">Back to Home.</a>
 			</h2>
 			<section>
-				<h2 id="skills">Project1 Description</h2>
+				<h2 id="skills">Dungeon Keeper: Remake</h2>
 				<section class="sub-card">
 					<h3>Type</h3>
 					<p class="tab">Game</p>
 					<h3>Language</h3>
 					<p class="tab">C++</p>
 					<h3>API's</h3>
-					<p class="tab">D3D11</p>
+					<p class="tab">D3D11, XAudio2</p>
 					<h3>Libraries</h3>
-					<p class="tab">None</p>
+					<p class="tab"><a href="http://www.grinninglizard.com/MicroPather/">Micropather</a>, <a href="https://github.com/dkfans/rnctools">RNCTools</a>, ScummVM's extracted video module, "<a href="https://github.com/ocornut/imgui">Dear Imgui</a>"</p>
 					<h3>Comments</h3>
-					<p class="tab">Made from scratch.<br>Written tools to export images in .DDS (using DirectXTex) and models in my own custom format (Using Assimp)</p>
+					<p class="tab">Used my ThempX11 engine as a base.</p>
 				</section>
-			</section>
-			
-			<section>
-				<h2 id="projects">Project 1</h2>
-				<p id="projects"> This is a project named project 1, this and that and this and that. </p>
 				
-				<p><br><br>Click on images to view the full version.</p>
+				<p id="projects">Dungeon Keeper: Remake was my graduation project, the goal for me was to recreate the game as best as I could by myself. Since the original game isn't open source a lot of the behaviour has been guessed by playing the original game and inspecting how certain things react and behave.<br><br>Another important goal for me was to read in the original files, this makes it so it requires the original game to run (prevents me from distributing copyrighted assets) and I wanted to the build to only exist out of a single .exe, no DLL's or other files next to it, so that using my version of the game was as simple as dropping the .exe in the game folder.</p>
+				<p id="projects">I started out with every step you'd see when running the game, so when you launch it you'd see a splash screen, then the intro video, a loading screen and finally the main menu. So in order to really get that feel when you start the game I started of with recreating this.</p>
+				<p id="projects">The splash screen was quite easy, it's simply a texture that shows full-screen for a few seconds, The step after this however was the first challenge, I had never worked with video before (well.. other than in Unity), though I do know about video codecs and video encoding it wasn't much help with the actual implementation. <br>The video files that Dungeon Keeper uses are Smacker Video files, this is a proprietary format by RAD Game Tools (same as BINK), There's a single page describing how the format can be decoded but it's not official and I also couldn't spend a week trying to write a video&audio decoder from scratch.</p>
+				
+				<p id="projects"><br>So I ended up looking for video libraries that could decode Smacker files, I ended up trying LibAV but other than a very very basic h264 player there's no documentation on how to set up anything else (and well the docs are lacking as well), in the end I couldn't get the smacker codec to initialize no matter what I tried, others worked which means I wasn't doing something terribly wrong but well.. I ended up abandoning libAV.<br> I looked around and saw Libsmacker which was a very simple library consisting out a few C and .h files. I got it working very quickly but the library failed to properly decode the video file as it showed artifacts a few seconds in (at the first pallette swap) meaning it was incorrectly handling Smacker video, or at the least this specific file.</p>
+				<p id="projects">See left: Libsmacker (artifacted), right: proper version.</p>
 				<div class="hcontainer">
-					<a target="_blank" href="./assets/images/monkey.gif">
-						<div class="imgcard">
-							<img src="./assets/images/monkey.gif">
+				<a target="_blank" href="assets/images/DKArtifact.mp4">
+						<div class="imgcardbig">
+							<video autoplay playsinline loop muted src="assets/images/DKArtifact.mp4">
+						</div>
+					</a>
+					<a target="_blank" href="assets/images/DKVideo.mp4">
+						<div class="imgcardbig">
+							<video autoplay playsinline loop muted src="assets/images/DKVideo.mp4">
 						</div>
 					</a>
 				</div>
-				<section class="sub-card">
-					<p>
-						This is a sub box to expand on some subject that I've gone over just ago
-					</p>
-					<h3><a class="link" href="Project1.html">Link to the github</a></h3>
-					<div class="hcontainer">
-						<a target="_blank" href="./assets/images/dragon.gif">
-							<div>
-								<img src="./assets/images/dragon.gif">
-							</div>
-						</a>
-						<a target="_blank" href="./assets/images/monkey.gif">
-							<div class="imgcard">
-								<img src="./assets/images/monkey.gif">
-							</div>
-						</a>
-						<a target="_blank" href="./assets/images/teapot.png">
-							<div class="imgcard">
-								<img src="./assets/images/teapot.png">
-							</div>
-						</a>
-					</div>
-					<div class="container">
-						<p>Fast 3D multi-threaded CPU rasterizer written in C++. It supports shaders, textures and more.</p>
-					</div>
-				</section>
-
+				<p id="projects">Eventually I discovered that ScummVM could play back Smacker video and that it was open-source, so with half a day of work I managed to separate the video module from it as it was quite tangled into the main engine code with lots of abstractions as well.</p>
 				
-			
+				<p id="projects"><br>Next up was another temporary full screen texture for the loading screen and the main menu, I wrote a simple UI button for this, but it turned out a bit more complex than I thought it would be as the buttons weren't a single texture or sprite but existed out of multiple parts, each of em animated and with different states.<br>After that was all done I ended up with a near exact copy of the original game's main menu (some buttons are slightly off the real position) but its very close!</p>
+				<a target="_blank" href="assets/images/DKMain.mp4">
+					<div class="imgcardbig">
+						<video autoplay playsinline loop muted src="assets/images/DKMain.mp4">
+					</div>
+				</a>
+				<p id="projects"><br>The level select screen was simply background texture and a overlaid front texture, they're of different sizes and their movement speeds are carefully tweaked to give a parallax effect whilst not showing their edges. The flag is another UI button placed at the part of the world the level will play.</p>
+	
+				<a target="_blank" href="assets/images/DKLevelSelect.mp4">
+					<div class="imgcardbig">
+						<video autoplay playsinline loop muted src="assets/images/DKLevelSelect.mp4">
+					</div>
+				</a>
+				
+				<p id="projects"><br>While I was researching on how Dungeon Keeper was put together I noticed the actual levels were very voxel-like. Each tile exists out of 3x3x8 cubes, and the entire level consists out of 85 by 85 tiles.</p>
+				<a target="_blank" href="./assets/images/DKVoxel.jpg">
+					<div class="imgcardbig">
+						<img src="./assets/images/DKVoxel.jpg">
+					</div>
+				</a>
+				<p id="projects"><br>So the first challenge was writing a voxel renderer which luckily due to the scale of a level and the nature of the ingame view didn't need to be super-optimized. I never measured the time it took to construct the whole voxel mesh, but the entire game tick runs in less than 1 ms with my i7 6700k, that includes all the creatures and their behaviour as well.</p>
+				<p id="projects"><br>Whilst on the topic of rendering, once the creatures were in and behaving properly I needed to have them actually discover tiles as well, as the player doesnt start of with the entire map visible. I thought of several ways to do this including the generic "Fog of War" approach but I imagined this wouldn't feel like the original implementation as one can see ingame that the entire tile is covered by a blackness on a (sub)tile basis.</p>
+				<p id="projects">So in the end I added a boolean to each tile indicating whether it was visible or not, if it wasn't it would render a full black tile, otherwise it'd render the real tile.</p>
+				<p id="projects">Checking for visibility is done by keeping track of neighbouring tiles, once a tile is dug out, the tiles surrounding that (if they're not visible) would get added to a list, once a creature is in range of that tile they would raycast towards it, if it hits that tile it would be marked visible and the invisible tiles surrounding that one would get added, this prevents me from having to check a big amount of tiles each time and only the tiles that actually have a chance of being seen would be checked.</p>
+				<p id="projects">A quick debug version of the visibility checking can be seen below:</p>
+				<a target="_blank" href="assets/images/DKVisibility.mp4">
+					<div class="imgcardbig">
+						<video autoplay playsinline loop muted src="assets/images/DKVisibility.mp4">
+					</div>
+				</a>
+				<p id="projects">For the creatures I wrote a task system that allows them to ask for tasks, depending on the availability this might either succeed or fail (in which case they will ask for a different one). Though the system is seperated into two parts, one for the imps, which are "Tasks" and one for the other creatures which are "Activities", This is due to how the creatures act. Tasks need to be kept track of and be made available again once an imp can't focus on it anymore (due to combat, being picked up or death). Activities are spontanious things that are only relevant to the creature itself, they don't need to be kept track of and can be freely forgotten about. Both systems are used similarly though.</p>
+				
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/DKTask.png">
+						<div class="imgcardbig">
+							<img src="./assets/images/DKTask.png">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/DKActivity.png">
+						<div class="imgcardbig">
+							<img src="./assets/images/DKActivity.png">
+						</div>
+					</a>
+				</div>
+				<a target="_blank" href="assets/images/DKMine.mp4">
+					<div class="imgcardbig">
+						<video autoplay playsinline loop muted src="assets/images/DKMine.mp4">
+					</div>
+				</a>
+				<p id="projects"><br>There's lots more that went on during this project, like parsing and running level scripts, the reverse engineering of a lot of files, playing sounds, or how the actual level is built, textured and updated, and much more, but I don't want this page to result in several dozens of megabytes so if you're curious to know more, feel free to ask me or look at the source code which can be found by using the github link at the top of this page.<br><br></p>
+				</section>
 		</div>
 	</div>
 
@@ -131,7 +160,7 @@
 				x: 0,
 				y: 0,
 				z: 0,
-				vx: 0,
+				vy: 0,
 				rand : 0,
 				dead: true
 			});
@@ -152,7 +181,7 @@
 				if (p.dead) continue;
 
 				ctx.beginPath();
-				ctx.arc(p.x, p.y  + Math.sin(p.rand + t * 0.1) * 10, p.z, 0, Math.PI * 2);
+				ctx.arc(p.x, p.y, p.z, 0, Math.PI * 2);
 				ctx.fill();
 			}
 		}
@@ -173,16 +202,16 @@
 			if (p === null) return;
 
 			particles[p].dead = false;
-			particles[p].x = -10;
-			particles[p].y = 5 + Math.random() * (canvas.height - 10);
+			particles[p].x = Math.random() * (canvas.width);
+			particles[p].y = -10;
 			particles[p].z = (Math.random() + 0.5) * 1.0;
-			particles[p].vx = (Math.random() + 0.2) * 5.0;
+			particles[p].vy = (Math.random() + 0.2) * 5.0;
 			particles[p].rand = Math.random();
 			particles[p].wave = Math.random() >= 0.5;
 		}
 		function update()
 		{
-			var t = time++ % 35;
+			var t = time++ % 25;
 			if(t == 0 )
 			{	
 				emit();
@@ -193,7 +222,7 @@
 			{
 				var p = particles[i];
 				if (p.dead) continue;
-				p.x += p.vx;
+				p.y += p.vy;
 
 				if (p.x > canvas.width+2 || p.y > canvas.height+2)
 					p.dead = true;
