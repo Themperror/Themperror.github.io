@@ -60,9 +60,12 @@
 					<h3>Comments</h3>
 					<p class="tab">Made from scratch.<br>Written tools to export images in .DDS (using DirectXTex) and models in my own custom format (Using Assimp).</p>
 				</section>
+				<h2 id="skills">Description</h2>
 				<p id="projects"> This was one of the two 6-month long project that were part of my final study year. The initial goal was to focus on shadowing techniques but after I implemented the first one, the decision to add PBR was quickly added as well.</p>
-				<p id="projects"> The scene is created with a <b>deferred renderer</b>, meaning I first render all the geometry to a few rendertargets which is called a <b>G(eometry)-Buffer.</b></p>
-				<p><br><br>Click on images to view the full versions.</p>
+				<p id="projects"> The scene is created with a <b>deferred renderer</b>, meaning I first render all the geometry to a few rendertargets called a <b>G(eometry)-Buffer</b> and then perform lighting on it.</p>
+				
+				<h2 id="skills"><br>The G-Buffer</h2>
+				<p><br>Click on images to view the full versions.</p>
 				<div class="hcontainer">
 					<a target="_blank" href="./assets/images/x11Diffuse.jpg">
 						<div class="imgcard">
@@ -96,6 +99,8 @@
 					</a>
 				</div>
 				<p id="projects">My G-Buffer exists out of the following data (left to right):<br>-Diffuse,<br>-World Normals,<br>-World Position,<br>-F0 (Index of Refraction),<br>-Misc (R: Roughness, G: Metallicness, B: EmissiveStrength, A: isEmissive), <br>-Depth.</b></p>		
+				
+				<h2 id="skills"><br>The Shadowing</h2>
 				<p id="projects"><br>After this step I calculate the shadows for all the lights, for Point Lights I use something called <b>Single Pass Render-to-Cubemap</b>, which uses geometry shaders to work on multiple viewports at once, rather than doing every face one by one.</p>
 				<p id="projects"><br>For Directional Lights I had implemented a few types of shadowing, this being the normal shadowmapping and <b>PCF</b> (including multisampled variants) and <b>Cascaded Shadow Mapping</b> which wasn't completely finished yet as it still suffers from swimming edges due to the light not moving in pixel-space.</p>
 				<p id="projects"><br>I also used a technique from DOOM <a href="http://www.adriancourreges.com/blog/2016/09/09/doom-2016-graphics-study/">(which can be found here)</a> called Shadow Map Atlassing.</p>
@@ -104,6 +109,8 @@
 				</div>
 				<p id="projects"><br>I wrote a simple command&conquer algorithm to reserve space in the shadow atlas for each light so I could simply call "ObtainTextureArea(size)" which would obtain a suitable area for the light to render to.</p>
 				
+				
+				<h2 id="skills"><br>PBR</h2>
 				<p id="projects"><br>For PBR I used sources from all over the place, most notably LearnOpenGL.com which has a nice guide on PBR, though a bit incomplete in my opinion so the PBR is a quite standard implementation.<br>Sadly <a href="https://google.github.io/filament/Filament.md.html">Google's Filament</a>  guide didn't exist yet when I was working on it as it's a godly source for PBR.</p> 
 				
 				<p id="projects">The scene is composed out of the extracted models from the Elemental Demo, which can be found on the Unreal Engine's Marketplace. Sadly as all the PBR related information is done on the materials inside the engine, all I got exported was the diffuse and normal maps. I wrote my own material system in order to gain some control of all the values and manually made a texture describing the PBR info per material. I am no artist however so if something looks off that's probably my fault with creating the textures.<br>Final result looks like this:</p> 
