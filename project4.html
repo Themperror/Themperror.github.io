@@ -176,7 +176,7 @@
 				p.vy -= 0.15;
 				p.y += p.vy;
 
-				if (p.x > canvas.width+2 || p.y > canvas.height+2)
+				if (p.y < -10)
 					p.dead = true;
 			}
 		}
