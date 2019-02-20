@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta property="og:image" content="./assets/images/avatar.png">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://Themperror.github.io/">
+		<meta property="og:title" content="Themperror's Portfolio">
+		<meta property="og:description" content="Game/Engine Programmer">
+
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Themperror's Portfolio</title>
+
+		<!-- <link href="./assets/foundation-icons.css" rel="stylesheet"> /-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="./assets/main.css">
+		<link rel="stylesheet" href="./assets/layout.css">
+		<link rel="stylesheet" href="./assets/monokai.min.css">
+
+		<link rel="shortcut icon" href="https://Themperror.github.io/favicon.ico">
+	</head>
+	<body>
+		<script src="./assets/scripts/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+		</script>
+
+		<div id="main" class="container">
+			<div class="container header" id="mainHeader">
+				<canvas class="headerCanvas" id="disp"></canvas>
+
+				<div class="avatar">
+						<div class="round-image pop" style="background-image: linear-gradient(rgba(229, 223, 197, 0.5), rgba(229, 223, 197, 0.4)), url(&#39;./assets/images/avatar.png&#39;);" title="Me">
+				</div>
+				</div>
+				<div class="container">
+					<h1 class="title"><b>Themperror</b></h1>
+					<h4 class="sub-title">Game/Engine Programmer</h4>
+					<div class="social">
+						<a class="fi-social-github menu-btn" href="https://github.com/Themperror" title="GitHub"></a>
+						<a class="fi-mail menu-btn" href="mailto:themperror1@gmail.com" title="E-Mail"></a>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+			<h2 id="welcome">
+				<a class="link" href="index.html">Back to Home.</a>
+			</h2>
+			<section>
+				<h2 id="skills">GPU Particles</h2>
+				
+				<h3><a class="link" href="https://github.com/Themperror/GPU-Particles">Link to the Github.</a></h3>
+				<section class="sub-card">
+					<h3>Type</h3>
+					<p class="tab">Tech Demo</p>
+					<h3>Language</h3>
+					<p class="tab">C++</p>
+					<h3>API's</h3>
+					<p class="tab">D3D11</p>
+					<h3>Libraries</h3>
+					<p class="tab">"Dear ImGui"</p>
+					<h3>Comments</h3>
+					<p class="tab">Uses DispatchIndirect for Compute and DrawInstancedIndirect for rendering.</p>
+				</section>
+				
+				<p id="projects">After a successful first interview for a job application, I got send a programming test, this involved creating a GPU Particle simulation using indirect drawing, compute shaders and geometry shaders. I hadn't done anything with compute before so I had to learn it while creating this, in 3 days time I was able to create this and send it in.</p>
+				<p id="projects">I know the basics of how multithreading works and how one could approach a few issues, but after doing some more research and while discussing with some other programmers I found out that applying CPU multithreading techniques to the GPU wasn't that great. After this revelation I reworked my code a bit to optimise it for the way the GPU likes it, it quickly became more stable (those TDR's crashing my GPU driver weren't fun).<br> Now I could run over 5 million particles at ~70 fps, I didn't push it too much as I had enough TDR's and hard reboots during the initial creation. <br><br> I limited it to 2 million particles to make sure it stays on the safe side and this runs at an easy (limited) 150 fps. The simulation itself uses 1 gravity point with N-Body physics and Verlet Integration.</p>
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/particles.jpg">
+						<div class="imgcardbig">
+							<img src="./assets/images/particles.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/particles2.jpg">
+						<div class="imgcardbig">
+							<img src="./assets/images/particles2.jpg">
+						</div>
+					</a>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<script src="./assets/scripts/navigo.js"></script>
+	<script src="./assets/scripts/showdown.js"></script>
+	<script src="./assets/scripts/highlight.min.js"></script>
+
+	<script type="text/javascript">
+		var mainHeader = document.getElementById("mainHeader");
+		var canvas = document.getElementById("disp");
+		var ctx = canvas.getContext("2d");
+
+		window.onresize = function() 
+		{
+			canvas.width = document.body.clientWidth;
+			canvas.height = mainHeader.clientHeight;
+		};
+		window.onresize();
+
+		var MAX_PARTICLES = 512;
+		var particles = [];
+
+		for (var i = 0; i < MAX_PARTICLES; i++) 
+		{
+			particles.push(
+			{
+				x: 0,
+				y: 0,
+				z: 0,
+				vy: 0,
+				rand : 0,
+				dead: true
+			});
+		}
+
+		function redraw()
+		{
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgb(21, 21, 21, 0.5)";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.globalCompositeOperation = "lighter";
+			ctx.fillStyle = "rgba(229, 223, 197, 0.5)";
+			var t = time
+			for (var i = 0; i < MAX_PARTICLES; i++) 
+			{
+				var p = particles[i];
+				if (p.dead) continue;
+
+				ctx.beginPath();
+				ctx.arc(p.x, p.y, p.z, 0, Math.PI * 2);
+				ctx.fill();
+			}
+		}
+
+		var time = 0;
+		function emit() 
+		{
+			var p = null;
+			for (var i = 0; i < MAX_PARTICLES; i++)
+			{
+				if (particles[i].dead) 
+				{
+					p = i;
+					break;
+				}
+			}
+
+			if (p === null) return;
+
+			particles[p].dead = false;
+			particles[p].x = Math.random() * (canvas.width);
+			particles[p].y = -2;
+			particles[p].z = (Math.random() + 0.5) * 1.5;
+			particles[p].vy = (Math.random() + 0.8) * 5.0;
+			particles[p].rand = Math.random();
+		}
+		function update()
+		{
+			var t = time++ % 25;
+			if(t == 0 )
+			{	
+				emit();
+				emit();
+			}
+
+			for (var i = 0; i < MAX_PARTICLES; i++) 
+			{
+				var p = particles[i];
+				if (p.dead) continue;
+				p.vy -= 0.15 + 0.05 * (Math.cos(time / Math.PI / 2.0 + i / Math.PI) ) * 4.0;
+				p.y += p.vy;
+				p.x += Math.sin(time / Math.PI / 5.0) * 4.0;
+
+				if (p.y < -10 )
+				{
+					p.dead = true;
+				}
+			}
+		}
+
+		function loop() 
+		{
+			update();
+			redraw();
+			window.requestAnimationFrame(loop);
+		}
+
+		loop();
+	</script>
+</body></html>
