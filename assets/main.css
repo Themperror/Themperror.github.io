@@ -177,7 +177,7 @@ pre code {
 	background-repeat: no-repeat;
 	background-size: cover;
 	overflow: hidden;
-	border-radius: 50%;
+	border-radius: 90%;
 	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 	align-self: center;
 }
