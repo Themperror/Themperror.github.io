@@ -46,19 +46,29 @@
 				<a class="link" href="index.html">Back to Home.</a>
 			</h2>
 			<section>
-				<h2 id="skills">T.B.A. Title</h2>
+				<h2 id="skills">Ni no Kuni II: The Prince's Edition</h2>
 				
 				<section class="sub-card">
 					<h3>Type</h3>
 					<p class="tab">Game</p>
 					<h3>Language</h3>
 					<p class="tab">C++</p>
+					<h3>Engine</h3>
+					<p class="tab">Proprietary</p>
+					<h3>Platforms</h3>
+					<p class= "tab">Nintendo Switch</p>
+					
+					
+					<h3>Comments</h3>
+					<p class="tab">Release date: September 17, 2021</p>
+					<h3>Original Platforms</h3>
+					<p class="tab">Windows, Playstation 4</p>
 				</section>
 				
 				<div class="hcontainer">
-					<a target="_blank" href="./assets/images/Secret.png">
+					<a target="_blank" href="./assets/images/nnk2.jpg">
 						<div class="imgcardbig">
-							<img src="./assets/images/Secret.png">
+							<img style='height: 100%; width: 70%; object-fit: cover' src="./assets/images/nnk2.jpg">
 						</div>
 					</a>
 				</div>
@@ -82,22 +92,42 @@
 		};
 		window.onresize();
 
-		var MAX_PARTICLES = 512;
-		var particles = [];
+		var MAX_PARTICLES = 256;
+		var particlesL = [];
+		var particlesC = [];
 
 		for (var i = 0; i < MAX_PARTICLES; i++) 
 		{
-			particles.push(
+			particlesL.push(
 			{
 				x: 0,
 				y: 0,
 				z: 0,
+				vx: 0,
 				vy: 0,
+				a: 255,
+				r: 255,
+				g: 255,
+				b: 255,
 				rand : 0,
-				dead: true
+				dead: true,
+				collide: false
+			});
+			particlesC.push(
+			{
+				x: 0,
+				y: 0,
+				z: 0,
+				vx: 0,
+				vy: 0,
+				a: 255,
+				r: 255,
+				g: 255,
+				b: 255,
+				rand : 0,
+				dead: true,
 			});
 		}
-
 		function redraw()
 		{
 			ctx.globalCompositeOperation = "source-over";
@@ -109,12 +139,24 @@
 			var t = time
 			for (var i = 0; i < MAX_PARTICLES; i++) 
 			{
-				var p = particles[i];
+				var p = particlesL[i];
 				if (p.dead) continue;
 
 				ctx.beginPath();
+				ctx.strokeStyle = "rgba("+ p.r +", "+ p.g +", "+ p.b +","+ p.a +")";
 				ctx.arc(p.x, p.y, p.z, 0, Math.PI * 2);
-				ctx.fill();
+				ctx.stroke();
+			}
+			
+			for (var i = 0; i < MAX_PARTICLES; i++) 
+			{
+				var p = particlesC[i];
+				if (p.dead) continue;
+
+				ctx.beginPath();
+				ctx.strokeStyle = "rgba("+ p.r +", "+ p.g +", "+ p.b +","+ p.a +")";
+				ctx.arc(p.x, p.y, p.z, 0, Math.PI * 2);
+				ctx.stroke();
 			}
 		}
 
@@ -124,7 +166,7 @@
 			var p = null;
 			for (var i = 0; i < MAX_PARTICLES; i++)
 			{
-				if (particles[i].dead) 
+				if (particlesL[i].dead) 
 				{
 					p = i;
 					break;
@@ -133,37 +175,118 @@
 
 			if (p === null) return;
 
-			particles[p].dead = false;
-			particles[p].x = Math.random() * (canvas.width);
-			particles[p].y = -2;
-			particles[p].z = (Math.random() + 0.5) * 1.5;
-			particles[p].vy = (Math.random() + 0.8) * 5.0;
-			particles[p].rand = Math.random();
+			particlesL[p].dead = false;
+			particlesL[p].x = Math.random() * canvas.width;
+			particlesL[p].y = canvas.height;
+			particlesL[p].z = (Math.random() + 1.5) * 2.0;
+			particlesL[p].vx = Math.random() * 1.5 - 0.75;
+			particlesL[p].vy = Math.random() * -1.5 - 2.0;
+			particlesL[p].a = Math.random();
+			particlesL[p].rand = Math.random();
 		}
+		
+		
+		var collisionDir = [1,1, 1, -1, -1, 1, -1,-1 , 1,0,  0,1, -1,0 , 0,-1 ]; 
+		function emitFire(posX, posY, size, colorR , colorG, colorB, index) 
+		{
+			var p = null;
+			for (var i = 0; i < MAX_PARTICLES; i++)
+			{
+				if (particlesC[i].dead) 
+				{
+					p = i;
+					break;
+				}
+			}
+
+			if (p === null) return;
+
+			
+			particlesC[p].dead = false;
+			particlesC[p].x = posX;
+			particlesC[p].y = posY;
+			particlesC[p].z = size;
+			
+			var dirX = collisionDir[index * 2] ;
+			var dirY = collisionDir[index * 2 + 1];
+			
+			var dist = Math.sqrt(Math.pow(dirX,2) + Math.pow(dirY,2))
+			dirX /= dist;
+			dirY /= dist;
+			
+			particlesC[p].vx = dirX;
+			particlesC[p].vy = dirY;
+			
+			particlesC[p].r = colorR;
+			particlesC[p].g = colorG;
+			particlesC[p].b = colorB;
+			particlesC[p].a = 1.0;
+			particlesC[p].rand = Math.random();
+			
+			if(index < 8)
+			{
+				index+=1;
+				emitFire(posX,posY,size,colorR,colorG,colorB, index);
+			}
+		}
+		
 		function update()
 		{
-			var t = time++ % 25;
+			var t = time++ % 40;
 			if(t == 0 )
 			{	
-				emit();
 				emit();
 			}
 
 			for (var i = 0; i < MAX_PARTICLES; i++) 
 			{
-				var p = particles[i];
+				var p = particlesL[i];
 				if (p.dead) continue;
-				p.vy -= 0.15 + 0.05 * (Math.cos(time / Math.PI / 2.0 + i / Math.PI) ) * 4.0;
+			
 				p.y += p.vy;
-				p.x += Math.sin(time / Math.PI / 5.0) * 4.0;
-
-				if (p.y < -10 )
+				p.x += p.vx;
+				if(p.vy < 0)
+					p.vy += 0.05 * (p.y / canvas.height) * 0.7;
+					
+				if(p.vy >= 0)
+				{
+					explode(p.x,p.y);
+					p.dead = true;
+				}
+				
+				p.a -= 0.005;
+				
+				
+				if (p.x > canvas.width || p.x < 0 || p.y < 0)
+				{
+					p.dead = true;
+				}
+			}
+			
+			for (var i = 0; i < MAX_PARTICLES; i++) 
+			{
+				var p = particlesC[i];
+				if (p.dead) continue;
+			
+				p.y += p.vy;
+				p.x += p.vx;
+				p.a -= 0.005;
+				if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height || p.a < 0)
 				{
 					p.dead = true;
 				}
 			}
 		}
 
+		function explode(x,y)
+		{
+			var size = (Math.random() + 0.8) * 1.7;
+			var R = Math.random() * 200.0 + 55.0;
+			var G = Math.random() * 200.0 + 55.0;
+			var B = Math.random() * 200.0 + 55.0;
+			emitFire(x,y,size,R,G,B, 0);
+		}
+		
 		function loop() 
 		{
 			update();
