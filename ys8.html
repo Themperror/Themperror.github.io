@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta property="og:image" content="./assets/images/avatar.png">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://Themperror.github.io/">
+		<meta property="og:title" content="Themperror's Portfolio">
+		<meta property="og:description" content="Game/Engine Programmer">
+
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Themperror's Portfolio</title>
+
+		<!-- <link href="./assets/foundation-icons.css" rel="stylesheet"> /-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="./assets/main.css">
+		<link rel="stylesheet" href="./assets/layout.css">
+		<link rel="stylesheet" href="./assets/monokai.min.css">
+
+		<link rel="shortcut icon" href="https://Themperror.github.io/favicon.ico">
+	</head>
+	<body>
+		<script src="./assets/scripts/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+		</script>
+
+		<div id="main" class="container">
+			<div class="container header" id="mainHeader">
+				<canvas class="headerCanvas" id="disp"></canvas>
+
+				<div class="avatar">
+						<div class="round-image pop" style="background-image: linear-gradient(rgba(229, 223, 197, 0.5), rgba(229, 223, 197, 0.4)), url(&#39;./assets/images/avatar.jpg&#39;);" title="Me">
+				</div>
+				</div>
+				<div class="container">
+					<h1 class="title"><b>Themperror</b></h1>
+					<h4 class="sub-title">Game/Engine Programmer</h4>
+					<div class="social">
+						<a class="fi-social-github menu-btn" href="https://github.com/Themperror" title="GitHub"></a>
+						<a class="fi-mail menu-btn" href="mailto:themperror1@gmail.com" title="E-Mail"></a>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+			<h2 id="welcome">
+				<a class="link" href="index.html">Back to Home.</a>
+			</h2>
+			<section>
+				<h2 id="skills">Ys VIII: Lacrimosa of Dana</h2>
+				
+				<section class="sub-card">
+					<h3>Type</h3>
+					<p class="tab">Game</p>	
+					<h3>Language</h3>
+					<p class="tab">C++</p>
+					<h3>Engine</h3>
+					<p class="tab">Proprietary</p>	
+					<h3>Platforms</h3>
+					<p class= "tab">PlayStation 5</p>	
+					<h3>Comments</h3>
+					<p class="tab">Release date: 15th of November, 2022</p>		
+				</section>
+							
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/ys8.jpg">
+						<div class="imgcardbig">
+							<img style='height: 100%; width: 100%; object-fit: cover' src="./assets/images/ys8.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/ys8_1.jpg">
+						<div class="imgcardbig">
+							<img style='height: 100%; width: 100%; object-fit: cover' src="./assets/images/ys8_1.jpg">
+						</div>
+					</a>
+				</div>
+				
+			</section>
+		</div>
+	</div>
+
+	<script src="./assets/scripts/navigo.js"></script>
+	<script src="./assets/scripts/showdown.js"></script>
+	<script src="./assets/scripts/highlight.min.js"></script>
+
+	<script type="text/javascript">
+		var mainHeader = document.getElementById("mainHeader");
+		var canvas = document.getElementById("disp");
+		var ctx = canvas.getContext("2d");
+
+		var particles = [];
+		
+		var MAX_PARTICLES_X = 0;
+		var MAX_PARTICLES_Y = 0;
+		var MAX_LIFE = 60;
+		var COLOR_R = 0;
+		var COLOR_G = 0;
+		
+		var iterationCount = 0;
+		
+		window.onresize = function() 
+		{
+			canvas.width = document.body.clientWidth;
+			canvas.height = mainHeader.clientHeight;
+			var biggest = 0;
+			var smallest = 0;
+			if(canvas.width > canvas.height)
+			{
+				biggest = canvas.width;
+				smallest = canvas.height;
+			}
+			else
+			{
+				biggest = canvas.height;
+				smallest = canvas.width;
+			}
+			
+			var ratio = biggest / smallest;
+			
+			MAX_PARTICLES_X = Math.floor(canvas.width / ratio);
+			MAX_PARTICLES_Y = Math.floor(canvas.height / ratio);
+			
+			particles = [];
+			for (var i = 0; i < MAX_PARTICLES_X * MAX_PARTICLES_Y; i++) 
+			{
+				var tx = i % MAX_PARTICLES_X;
+				var ty = Math.floor(i / MAX_PARTICLES_X);
+				
+				particles.push(
+				{
+					x: (tx / MAX_PARTICLES_X) * canvas.width,
+					y: (ty / MAX_PARTICLES_Y) * canvas.height,
+					r: 10,
+					g: 255,
+					size: 3,
+					life : 0,
+					dead: true,
+					justAlived: false,
+				});
+			}
+			
+			for (var i = 0; i < 5; i++)
+			{
+				var rX = Math.floor(((Math.random() * MAX_PARTICLES_X)));
+				var rY = Math.floor(((Math.random() * MAX_PARTICLES_Y)));
+				particles[rX + rY * MAX_PARTICLES_X].dead = false;
+			}
+		};
+		
+		window.onresize();
+
+		
+		function redraw()
+		{
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgb(21, 21, 21, 1.0)";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.globalCompositeOperation = "source-over"
+			ctx.fillStyle = "rgba("+ COLOR_R +", "+ COLOR_G +", 10, 255)";
+				
+			var biggest = 0;
+			var smallest = 0;
+			if(canvas.width > canvas.height)
+			{
+				biggest = canvas.width;
+				smallest = canvas.height;
+			}
+			else
+			{
+				biggest = canvas.height;
+				smallest = canvas.width;
+			}
+			
+			var ratio = biggest / smallest;	
+				
+			for (var i = 0; i < MAX_PARTICLES_X * MAX_PARTICLES_Y; i++) 
+			{
+				var p = particles[i];
+				if (p.dead) continue;
+
+				ctx.beginPath();
+				ctx.fillRect(p.x, p.y,ratio,ratio);
+			}
+		}
+
+		function triggerParticle(x, y)
+		{
+			var particle = particles[x + y * MAX_PARTICLES_X];
+			if(particle.dead )
+			{
+				particle.dead = false;
+				particle.justAlived = true;
+			}
+			else
+			{
+				particle.dead = true;
+			}	
+			particle.life = 0;
+		}
+
+		var time = 0;
+		
+		function update()
+		{
+			var width = canvas.width;
+			var height = canvas.height;
+			time++;
+			if(time > MAX_LIFE)
+			{
+				iterationCount++;
+				time = 0;
+				for (var i = 0; i < MAX_PARTICLES_X * MAX_PARTICLES_Y; i++) 
+				{
+					var p = particles[i];
+					if(p.dead) continue;
+					if(p.justAlived) continue;
+					
+					var x = i % MAX_PARTICLES_X;
+					var y = Math.floor(i / MAX_PARTICLES_X);
+
+					p.dead = true;
+					if(x - 1 > 0)
+					{
+						triggerParticle(x-1,y);
+					}
+					if(x + 1 < MAX_PARTICLES_X)
+					{
+						triggerParticle(x+1,y);
+					}
+					if(y + 1 < MAX_PARTICLES_Y)
+					{
+						triggerParticle(x,y+1);
+					}
+					if(y - 1 > 0)
+					{
+						triggerParticle(x,y-1);
+					}
+				}
+				for (var i = 0; i < MAX_PARTICLES_X * MAX_PARTICLES_Y; i++) 
+				{
+					particles[i].justAlived = false;
+				}
+			}
+			var age = time / MAX_LIFE;
+			
+			COLOR_R = 10 + 245*age;
+			COLOR_G = 255 - 245*age;
+			if(iterationCount > 150)
+			{
+				//reset, it'll likely just be noise at this pointer
+				window.onresize();
+				iterationCount = 0;
+			}
+		}
+		
+		function loop() 
+		{
+			update();
+			redraw();
+			window.requestAnimationFrame(loop);
+		}
+
+		loop();
+	</script>
+</body></html>
