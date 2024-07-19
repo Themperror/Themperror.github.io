@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta property="og:image" content="./assets/images/avatar.png">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://Themperror.github.io/">
+		<meta property="og:title" content="Themperror's Portfolio">
+		<meta property="og:description" content="Game/Engine Programmer">
+
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Themperror's Portfolio</title>
+
+		<!-- <link href="./assets/foundation-icons.css" rel="stylesheet"> /-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="./assets/main.css">
+		<link rel="stylesheet" href="./assets/layout.css">
+		<link rel="stylesheet" href="./assets/monokai.min.css">
+
+		<link rel="shortcut icon" href="https://Themperror.github.io/favicon.ico">
+	</head>
+	<body>
+		<script src="./assets/scripts/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+		</script>
+
+		<div id="main" class="container">
+			<div class="container header" id="mainHeader">
+				<canvas class="headerCanvas" id="disp"></canvas>
+
+				<div class="avatar">
+						<div class="round-image pop" style="background-image: linear-gradient(rgba(229, 223, 197, 0.5), rgba(229, 223, 197, 0.4)), url(&#39;./assets/images/avatar.jpg&#39;);" title="Me">
+				</div>
+				</div>
+				<div class="container">
+					<h1 class="title"><b>Themperror</b></h1>
+					<h4 class="sub-title">Game/Engine Programmer</h4>
+					<div class="social">
+						<a class="fi-social-github menu-btn" href="https://github.com/Themperror" title="GitHub"></a>
+						<a class="fi-mail menu-btn" href="mailto:themperror1@gmail.com" title="E-Mail"></a>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+			<h2 id="welcome">
+				<a class="link" href="index.html">Back to Home.</a>
+			</h2>
+			<section>
+				<h2 id="skills">The Legend of Heroes: Trails of Cold Steel III</h2>
+				
+				<section class="sub-card">
+					<h3>Type</h3>
+					<p class="tab">Game</p>	
+					<h3>Language</h3>
+					<p class="tab">C++</p>
+					<h3>Engine</h3>
+					<p class="tab">Proprietary</p>	
+					<h3>Platforms</h3>
+					<p class= "tab">PlayStation 5</p>	
+					<h3>Comments</h3>
+					<p class="tab">Release date: 16th of February, 2024</p>		
+				</section>
+							
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/tocs3.jpg">
+						<div class="imgcardbig">
+							<img style='height: 100%; width: 100%; object-fit: fit' src="./assets/images/tocs3.jpg">
+						</div>
+					</a>
+				</div>
+				
+			</section>
+		</div>
+	</div>
+
+	<script src="./assets/scripts/navigo.js"></script>
+	<script src="./assets/scripts/showdown.js"></script>
+	<script src="./assets/scripts/highlight.min.js"></script>
+
+	<script type="text/javascript">
+		var mainHeader = document.getElementById("mainHeader");
+		var canvas = document.getElementById("disp");
+		var ctx = canvas.getContext("2d");
+		
+		var vectorField = [];
+		
+		var particles = [];
+		var MAX_PARTICLES_X = 25;
+		var MAX_PARTICLES_Y = 25;
+		
+		var VF_SIZEX = 20;
+		var VF_SIZEY = 20;
+		
+		var TOTAL_PARTICLES = MAX_PARTICLES_X * MAX_PARTICLES_Y;
+		
+		window.onresize = function() 
+		{
+			canvas.width = document.body.clientWidth;
+			canvas.height = mainHeader.clientHeight;
+			
+			var biggest = 0;
+			var smallest = 0;
+			if(canvas.width > canvas.height)
+			{
+				biggest = canvas.width;
+				smallest = canvas.height;
+			}
+			else
+			{
+				biggest = canvas.height;
+				smallest = canvas.width;
+			}
+			
+			var pSize = (biggest / smallest);
+			
+			particles = [];
+			for (var i = 0; i < TOTAL_PARTICLES; i++) 
+			{
+				var tx = i % MAX_PARTICLES_X + 0.5;
+				var ty = Math.floor(i / MAX_PARTICLES_X) + 0.5;
+				
+				
+				particles.push(
+				{
+					x: (tx / MAX_PARTICLES_X) * canvas.width * 0.6 + canvas.width * 0.2,
+					y: (ty / MAX_PARTICLES_Y) * canvas.height * 0.6 + canvas.height * 0.2,
+					rand: Math.random(),
+					velX: 0.0,
+					velY: 0.0,
+					size: pSize
+				});
+				
+				particles[i].x += particles[i].rand * (canvas.width * 0.05);
+				particles[i].y += particles[i].rand * (canvas.height * 0.05);
+			}
+			
+			
+			vectorField = [];
+			for (var i = 0; i < VF_SIZEX*VF_SIZEY; i++) 
+			{
+				var tx = i % VF_SIZEX;
+				var ty = Math.floor(i / VF_SIZEX);
+				
+				var velX = 0;
+				var velY = 0;
+				if(ty < 2)
+				{
+					velY = 1.5;
+					
+				}
+				else if(ty > VF_SIZEY - 2)
+				{
+					velY = -1.5;
+				}
+				else
+				{
+					velY = Math.random() * 2.0 - 1.0;
+					velY *= 0.5;
+				}
+				
+				if(tx < 2)
+				{
+					velX = 1.5;
+				}
+				else if( tx > VF_SIZEX - 2)
+				{
+					velX = -1.5;
+				}
+				else
+				{
+					velX = Math.random() * 2.0 - 1.0;
+					velX *= 0.5;
+				}
+				
+				
+				vectorField.push(
+				{
+					x: velX * 5.0,
+					y: velY * 5.0,
+				});
+			}
+			
+		};
+		
+		window.onresize();
+
+		
+		function redraw()
+		{
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgb(21, 21, 21, 1.0)";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "rgba(80,80,80,255)";
+
+			ctx.globalCompositeOperation = "source-over";
+			
+			//caps the value to 255
+			var to255 = 31.875 * 0.7; // * 0.7 to reduce brightness a bit
+			var to128 = to255 / 2.0;
+			
+			for (var i = 0; i < TOTAL_PARTICLES; i++) 
+			{
+				var p = particles[i];
+				ctx.beginPath();
+				var x = Math.abs(p.velX);
+				var y = Math.abs(p.velY);
+				x = x > 8 ? 8 : x;
+				y = y > 8 ? 8 : y;
+				ctx.fillStyle = "rgba("+ (x * to255) +","+ (x * to128 + y * to128) +","+ (y * to255) +",255)";
+				if(p.velY < 0)
+				{
+					ctx.fillRect(p.x, p.y, p.size,p.size);
+				}
+				else
+				{
+					ctx.arc(p.x, p.y, p.size * 0.8, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.stroke();
+				}
+			}
+		}
+
+		var time = 0;
+		
+		function update()
+		{
+			var dt = 1.0/60.0;
+			var width = canvas.width;
+			var height = canvas.height;
+			time++;
+			//
+			for (var i = 0; i < TOTAL_PARTICLES; i++) 
+			{
+				var p = particles[i];
+								
+				var vfX = Math.floor((p.x / width) * VF_SIZEX);
+				vfX = vfX >= VF_SIZEX ? VF_SIZEX-1 : vfX < 0 ? 0 : vfX;
+				
+				var vfY = Math.floor((p.y / height) * VF_SIZEY);
+				vfY = vfY >= VF_SIZEY ? VF_SIZEY-1 : vfY < 0 ? 0 : vfY;
+				
+				var vfIndex = vfX + vfY * VF_SIZEX;
+				if(vfIndex >= VF_SIZEX*VF_SIZEY)
+				{
+					vfIndex = (VF_SIZEX * VF_SIZEY) - 1;
+				}
+				
+				p.velX += vectorField[vfIndex].x * dt;
+				p.velY += vectorField[vfIndex].y * dt;
+				
+				p.y += p.velY * dt;
+				p.x += p.velX * dt;
+							
+				
+				if(p.x > width)
+				{
+					p.velX =  vectorField[vfIndex].x;
+					p.x = width;
+				}
+				else if(p.x < 0)
+				{
+					p.velX = vectorField[vfIndex].x;
+					p.x = 0;
+				}
+				
+				if(p.y > height)
+				{
+					p.velY = vectorField[vfIndex].y;
+					p.y = height;
+				}
+				else if(p.y < 0)
+				{
+					p.velY = vectorField[vfIndex].y;
+					p.y = 0;
+				}
+				
+				
+			}
+		}
+		
+		function loop() 
+		{
+			update();
+			redraw();
+			window.requestAnimationFrame(loop);
+		}
+
+		loop();
+	</script>
+</body></html>
