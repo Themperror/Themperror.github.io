@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta property="og:image" content="./assets/images/avatar.png">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://Themperror.github.io/">
+		<meta property="og:title" content="Themperror's Portfolio">
+		<meta property="og:description" content="Game/Engine Programmer">
+
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Themperror's Portfolio</title>
+
+		<!-- <link href="./assets/foundation-icons.css" rel="stylesheet"> /-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="./assets/main.css">
+		<link rel="stylesheet" href="./assets/layout.css">
+		<link rel="stylesheet" href="./assets/monokai.min.css">
+
+		<link rel="shortcut icon" href="https://Themperror.github.io/favicon.ico">
+	</head>
+	<body>
+		<script src="./assets/scripts/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+		</script>
+
+		<div id="main" class="container">
+			<div class="container header" id="mainHeader">
+				<canvas class="headerCanvas" id="disp"></canvas>
+
+				<div class="avatar">
+						<div class="round-image pop" style="background-image: linear-gradient(rgba(229, 223, 197, 0.5), rgba(229, 223, 197, 0.4)), url(&#39;./assets/images/avatar.jpg&#39;);" title="Me">
+				</div>
+				</div>
+				<div class="container">
+					<h1 class="title"><b>Themperror</b></h1>
+					<h4 class="sub-title">Game/Engine Programmer</h4>
+					<div class="social">
+						<a class="fi-social-github menu-btn" href="https://github.com/Themperror" title="GitHub"></a>
+						<a class="fi-mail menu-btn" href="mailto:themperror1@gmail.com" title="E-Mail"></a>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+			<h2 id="welcome">
+				<a class="link" href="index.html">Back to Home.</a>
+			</h2>
+			<section>
+				<h2 id="skills">The Legend of Heroes: Trails of Cold Steel IV</h2>
+				
+				<section class="sub-card">
+					<h3>Type</h3>
+					<p class="tab">Game</p>	
+					<h3>Language</h3>
+					<p class="tab">C++</p>
+					<h3>Engine</h3>
+					<p class="tab">Proprietary</p>	
+					<h3>Platforms</h3>
+					<p class= "tab">PlayStation 5</p>	
+					<h3>Comments</h3>
+					<p class="tab">Release date: 16th of February, 2024</p>		
+				</section>
+							
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/tocs4.jpg">
+						<div class="imgcardbig">
+							<img style='height: 100%; width: 100%; object-fit: fit' src="./assets/images/tocs4.jpg">
+						</div>
+					</a>
+				</div>
+				
+			</section>
+		</div>
+	</div>
+
+	<script src="./assets/scripts/navigo.js"></script>
+	<script src="./assets/scripts/showdown.js"></script>
+	<script src="./assets/scripts/highlight.min.js"></script>
+
+	<script type="text/javascript">
+		var mainHeader = document.getElementById("mainHeader");
+		var canvas = document.getElementById("disp");
+		var ctx = canvas.getContext("2d");
+		
+		var bird = {x:0, y:0, size:0 };
+		var pipes = [];
+		var MAX_PIPES = 5;
+		var lastPipeHeight = 0;
+		var lastPipeGapSize = 0;
+		var lastPipeIndex = 0;
+		
+		
+		function clamp( val, min, max ) 
+		{
+			return Math.min( Math.max( val, min ), max )
+		}
+
+		function lerp( a, b, t ) 
+		{
+			t = clamp(t, 0.0, 1.0);
+			return a + t * (b - a);
+		}
+		
+		function bezier(p0, p1, p2, t)
+		{
+			var oneMinusT = (1 - t);
+			var oneMinusT2 = oneMinusT * oneMinusT;
+			return p1 + oneMinusT2 * (p0 - p1) + (t*t) * (p2-p1);
+		}
+		
+		window.onresize = function() 
+		{
+			canvas.width = document.body.clientWidth;
+			canvas.height = mainHeader.clientHeight;
+			
+			var biggest = 0;
+			var smallest = 0;
+			if(canvas.width > canvas.height)
+			{
+				biggest = canvas.width;
+				smallest = canvas.height;
+			}
+			else
+			{
+				biggest = canvas.height;
+				smallest = canvas.width;
+			}
+			
+			var pSize = (biggest / smallest);
+			
+			pipes = [];
+			for (var i = 0; i < MAX_PIPES; i++) 
+			{
+				pipes.push(
+				{
+					x: (canvas.width / MAX_PIPES) * i,
+					height: Math.random() * canvas.height * 0.8 + canvas.height * 0.1,
+					gapSize: pSize * 7,
+				});
+			}
+			bird.size = pSize;
+			lastPipeHeight = canvas.height / 2.0;
+			lastPipeGapSize = pSize * 7;
+			bird.y = lastPipeHeight;
+		};
+		
+		window.onresize();
+
+		
+		var birdOffsetY;
+		
+		function redraw()
+		{
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgb(21, 21, 21, 1.0)";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "rgba(80,200,120,255)";
+
+			ctx.globalCompositeOperation = "source-over";
+			for (var i = 0; i < MAX_PIPES; i++) 
+			{
+				var p = pipes[i];
+				
+				ctx.beginPath();
+				//top bar
+				ctx.fillRect(p.x, 0, bird.size * 3, p.height);
+				//bottom bar
+				var offset = p.height + p.gapSize; 
+				ctx.fillRect(p.x, offset, bird.size * 3, canvas.height - offset);
+			}
+			ctx.beginPath();
+			ctx.fillStyle = "rgba(200,200,80,255)";
+			var correctedY = bird.y + birdOffsetY;
+			if(correctedY > canvas.height - bird.size * 2)
+			{
+				correctedY = canvas.height - bird.size * 2;
+			}
+			ctx.arc(bird.x, correctedY, bird.size, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.stroke();
+		}
+
+		var time = 0;
+
+		function update()
+		{
+			var dt = 1.0/60.0;
+			var width = canvas.width;
+			var height = canvas.height;
+			time++;
+			
+			
+			
+			bird.x = canvas.width * 0.9;
+			bird.y = height / 2.0;
+			
+			
+			for (var i = 0; i < MAX_PIPES; i++) 
+			{
+				var p = pipes[i];
+				p.x += dt * 70.0;
+				
+				if(p.x > canvas.width)
+				{
+					p.x = 0;
+					p.height = Math.random() * canvas.height * 0.7 + canvas.height * 0.1;
+				}		
+			}
+			
+			var smallestDist = canvas.width;
+			var closestPipe = {x:0, height:0, gapSize:0};
+			for (var i = 0; i < MAX_PIPES; i++) 
+			{
+				var p = pipes[i];
+				var dist = bird.x - p.x;
+				if( p.x < bird.x  && dist > 0 && dist < smallestDist)
+				{
+					smallestDist = dist;
+				}
+				if(p.x > closestPipe.x && p.x < bird.x)
+				{
+					closestPipe = p;
+				}
+				if(dist <= 0)
+				{
+					console.log(dist);
+					lastPipeHeight = p.height;
+					lastPipeGapSize = p.gapSize;
+				}
+			}
+			var xDist = (smallestDist) / (canvas.width / MAX_PIPES);
+			bird.y = lerp(closestPipe.height + closestPipe.gapSize / 2, lastPipeHeight + lastPipeGapSize / 2, xDist);
+			birdOffsetY = bezier(0, canvas.height, 0, xDist) * 0.2;
+			birdOffsetY *= bezier(closestPipe.height, canvas.height*0.8, closestPipe.height, xDist)  / canvas.height * 4;
+		}
+		
+		function loop() 
+		{
+			update();
+			redraw();
+			window.requestAnimationFrame(loop);
+		}
+
+		loop();
+	</script>
+</body></html>
