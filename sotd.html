@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta property="og:image" content="./assets/images/avatar.png">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://Themperror.github.io/">
+		<meta property="og:title" content="Themperror's Portfolio">
+		<meta property="og:description" content="Game/Engine Programmer">
+
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Themperror's Portfolio</title>
+
+		<!-- <link href="./assets/foundation-icons.css" rel="stylesheet"> /-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="./assets/main.css">
+		<link rel="stylesheet" href="./assets/layout.css">
+		<link rel="stylesheet" href="./assets/monokai.min.css">
+
+		<link rel="shortcut icon" href="https://Themperror.github.io/favicon.ico">
+	</head>
+	<body>
+		<script src="./assets/scripts/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+		</script>
+
+		<div id="main" class="container">
+			<div class="container header" id="mainHeader">
+				<canvas class="headerCanvas" id="disp"></canvas>
+
+				<div class="avatar">
+						<div class="round-image pop" style="background-image: linear-gradient(rgba(229, 223, 197, 0.5), rgba(229, 223, 197, 0.4)), url(&#39;./assets/images/avatar.jpg&#39;);" title="Me">
+				</div>
+				</div>
+				<div class="container">
+					<h1 class="title"><b>Themperror</b></h1>
+					<h4 class="sub-title">Game/Engine Programmer</h4>
+					<div class="social">
+						<a class="fi-social-github menu-btn" href="https://github.com/Themperror" title="GitHub"></a>
+						<a class="fi-mail menu-btn" href="mailto:themperror1@gmail.com" title="E-Mail"></a>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+			<h2 id="welcome">
+				<a class="link" href="index.html">Back to Home.</a>
+			</h2>
+			<section>
+				<h2 id="skills">Shadows of the Damned: Hella Remastered</h2>
+				
+				<section class="sub-card">
+					<h3>Type</h3>
+					<p class="tab">Game</p>	
+					<h3>Language</h3>
+					<p class="tab">C++</p>
+					<h3>Engine</h3>
+					<p class="tab">Proprietary</p>	
+					<h3>Platforms</h3>
+					<p class= "tab">Windows, Xbox One, Xbox Series, Nintendo Switch, Playstation 4, Playstation 5</p>	
+					<h3>Comments</h3>
+					<p class="tab">TBA</p>		
+				</section>
+							
+				<div class="hcontainer">
+					<a target="_blank" href="./assets/images/sotd1.jpg">
+						<div class="imgcard">
+							<img  style='height: 100%; width: 100%; object-fit: fit' src="./assets/images/sotd1.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/sotd2.jpg">
+						<div class="imgcard">
+							<img  style='height: 100%; width: 100%; object-fit: fit' src="./assets/images/sotd2.jpg">
+						</div>
+					</a>
+					<a target="_blank" href="./assets/images/sotd3.jpg">
+						<div class="imgcard">
+							<img  style='height: 100%; width: 100%; object-fit: fit' src="./assets/images/sotd3.jpg">
+						</div>
+					</a>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<script src="./assets/scripts/navigo.js"></script>
+	<script src="./assets/scripts/showdown.js"></script>
+	<script src="./assets/scripts/highlight.min.js"></script>
+
+	<script type="text/javascript">
+		var mainHeader = document.getElementById("mainHeader");
+		var canvas = document.getElementById("disp");
+		var ctx = canvas.getContext("2d");
+		
+		
+		
+		function clamp( val, min, max ) 
+		{
+			return Math.min( Math.max( val, min ), max )
+		}
+
+		function lerp( a, b, t ) 
+		{
+			t = clamp(t, 0.0, 1.0);
+			return a + t * (b - a);
+		}
+		
+		function bezier(p0, p1, p2, t)
+		{
+			var oneMinusT = (1 - t);
+			var oneMinusT2 = oneMinusT * oneMinusT;
+			return p1 + oneMinusT2 * (p0 - p1) + (t*t) * (p2-p1);
+		}
+		
+		var droplets = [];
+		var fallingDrops = [];
+		var dropLocations = [];
+		var MAX_DROPLETS = 75;
+		var SPLATTER_DROPLET_COUNT = 25;
+		var MAX_FALLING_DROPS = MAX_DROPLETS / SPLATTER_DROPLET_COUNT;
+		var screenRatioSize;
+		
+		var dropIndex = 0;
+		function reset()
+		{
+			for (var i = 0; i < MAX_DROPLETS; i++)
+			{
+				var p = droplets[i];
+				p.active = false;
+			}
+			
+			var dropRangeX = canvas.width / MAX_FALLING_DROPS;
+			var dropRangeY = canvas.height * 0.4;
+			var dropRangeYOffset = canvas.height * 0.333;
+			
+			for (var i = 0; i < MAX_FALLING_DROPS; i++)
+			{
+				var p = fallingDrops[i];
+				p.active = false;
+				p.x = 0;
+				p.y = 0;
+				p.velY = 0;
+				p.size = screenRatioSize;
+				
+				var d = dropLocations[i];
+				d.y = dropRangeY * Math.random();
+				d.x = dropRangeX * Math.random();
+				d.x += dropRangeX * i;	
+				d.velY = Math.random() + 0.3;
+				
+			}
+			dropIndex = 0;
+		}
+		
+		window.onresize = function() 
+		{
+			canvas.width = document.body.clientWidth;
+			canvas.height = mainHeader.clientHeight;
+			
+			var biggest = 0;
+			var smallest = 0;
+			if(canvas.width > canvas.height)
+			{
+				biggest = canvas.width;
+				smallest = canvas.height;
+			}
+			else
+			{
+				biggest = canvas.height;
+				smallest = canvas.width;
+			}
+			
+			screenRatioSize = (biggest / smallest);
+			
+			for (var i = 0; i < MAX_DROPLETS; i++)
+			{
+				droplets.push({
+					active: false,
+					x:0,
+					y:0,
+					velX:0,
+					velY:0,
+					size:screenRatioSize
+				});
+			}
+			for (var i = 0; i < MAX_FALLING_DROPS; i++)
+			{
+				fallingDrops.push({
+					active: false,
+					x:0,
+					y:0,
+					velX:0,
+					velY:0,
+					size:screenRatioSize
+				});
+				
+				dropLocations.push({
+					x:0,
+					y:0,
+					velY:0
+				});
+			}
+			
+			reset();
+			
+		};
+		
+		window.onresize();
+		
+		
+		function redraw()
+		{
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgb(21, 21, 21, 1.0)";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.globalCompositeOperation = "source-over";
+			ctx.fillStyle = "rgba(200,0,0,255)";
+			ctx.strokeStyle = "rgba(200,0,0,255)";
+			
+			for (var i = 0; i < MAX_FALLING_DROPS; i++) 
+			{
+				var p = fallingDrops[i];
+				if(!p.active) continue;
+				
+				ctx.beginPath();
+				var cappedSize = Math.max(p.size * (p.velY * 5), 0.1);
+				ctx.arc(p.x, p.y, cappedSize, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.stroke();
+			}
+			
+			for (var i = 0; i < MAX_DROPLETS; i++) 
+			{
+				var p = droplets[i];
+				if(!p.active) continue;
+				
+				ctx.beginPath();
+				ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.stroke();
+			}
+		}
+
+		var time = 0;
+		function splatter(x, y)
+		{
+			var step = (Math.PI * 2) / SPLATTER_DROPLET_COUNT;
+			var i = 0;
+			var currentCount = 0;
+			for(; currentCount < SPLATTER_DROPLET_COUNT && i < MAX_DROPLETS; )
+			{
+				var p = droplets[i];
+				if(p.active)
+				{
+					i++;
+					continue;
+				}
+				p.active = true;
+				p.x = x;
+				p.y = y;
+				p.velX = Math.sin(step * currentCount + step*Math.random()*2) * (Math.random() + 0.2);
+				p.velY = Math.cos(step * currentCount + step*Math.random()*2) * (Math.random() + 0.2);
+				p.size = screenRatioSize + screenRatioSize * (Math.random()*10);
+				p.size /= 2.0;
+				currentCount++;
+				i++;
+			}
+		}
+
+		
+		function update()
+		{
+			var dt = 1.0/60.0;
+			var width = canvas.width;
+			var height = canvas.height;
+			if(time > 500)
+			{
+				reset();
+				time = 0;
+			}
+			if(time % 75 == 0 && dropIndex < MAX_FALLING_DROPS)
+			{
+				var f = fallingDrops[dropIndex];
+				f.active = true;
+				f.x = dropLocations[dropIndex].x;
+				f.y = dropLocations[dropIndex].y;
+				f.velY = dropLocations[dropIndex].velY;
+				dropIndex++;
+			}
+			
+			for(var i = 0; i < MAX_FALLING_DROPS; i++)
+			{
+				var f = fallingDrops[i];
+				if(!f.active) continue;
+				f.y += f.velY;
+				f.velY -= f.velY * dt;
+				if(f.velY <= 0.1)
+				{
+					f.active = false;
+					splatter(f.x, f.y);
+				}
+			}
+			
+			
+			for (var i = 0; i < MAX_DROPLETS; i++) 
+			{
+				var p = droplets[i];
+				if(!p.active) continue;
+				p.x += p.velX;
+				p.y += p.velY;
+				
+				p.velX -= p.velX * dt;
+				p.velY -= p.velY * dt;
+			}
+			
+			time++;
+		}
+		
+		function loop() 
+		{
+			update();
+			redraw();
+			window.requestAnimationFrame(loop);
+		}
+
+		loop();
+	</script>
+</body></html>
