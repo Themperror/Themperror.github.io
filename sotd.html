@@ -92,6 +92,7 @@
 		var ctx = canvas.getContext("2d");
 		
 		
+		var time = 0;
 		
 		function clamp( val, min, max ) 
 		{
@@ -149,6 +150,7 @@
 				
 			}
 			dropIndex = 0;
+			time = 0;
 		}
 		
 		window.onresize = function() 
@@ -241,7 +243,6 @@
 			}
 		}
 
-		var time = 0;
 		function splatter(x, y)
 		{
 			var step = (Math.PI * 2) / SPLATTER_DROPLET_COUNT;
@@ -276,7 +277,6 @@
 			if(time > 500)
 			{
 				reset();
-				time = 0;
 			}
 			if(time % 75 == 0 && dropIndex < MAX_FALLING_DROPS)
 			{
